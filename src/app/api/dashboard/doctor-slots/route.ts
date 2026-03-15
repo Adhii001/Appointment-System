@@ -13,30 +13,38 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const forwardedHost = request.headers.get("x-forwarded-host");
-  const host = forwardedHost || request.headers.get("host");
-  const forwardedProto = request.headers.get("x-forwarded-proto");
+  const baseUrl = request.nextUrl.origin;
 
-  if (!host) {
+  try {
+    const response = await fetch(
+      `${baseUrl}/api/doctor/${doctorId}/slots?date=${encodeURIComponent(date)}`,
+      { cache: "no-store" }
+    );
+
+    const contentType = response.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      const data = await response.json();
+      return NextResponse.json(data, { status: response.status });
+    }
+
+    const bodyText = await response.text();
     return NextResponse.json(
-      { error: "Unable to resolve request host" },
-      { status: 500 }
+      {
+        error: "Upstream endpoint did not return JSON",
+        upstreamStatus: response.status,
+        upstreamContentType: contentType || "unknown",
+        upstreamBodyPreview: bodyText.slice(0, 200),
+      },
+      { status: response.ok ? 502 : response.status }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "Failed to reach upstream endpoint",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 502 }
     );
   }
-
-  // In some proxy/dev setups (including Codespaces), localhost is served over HTTP.
-  const protocol =
-    host.startsWith("localhost") || host.startsWith("127.0.0.1")
-      ? "http"
-      : forwardedProto || "http";
-
-  const baseUrl = `${protocol}://${host}`;
-
-  const response = await fetch(
-    `${baseUrl}/api/doctor/${doctorId}/slots?date=${encodeURIComponent(date)}`,
-    { cache: "no-store" }
-  );
-
-  const data = await response.json();
-  return NextResponse.json(data, { status: response.status });
 }
