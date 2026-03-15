@@ -1,0 +1,30 @@
+-- CreateTable
+CREATE TABLE "Doctor" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "totalDailyMinutes" INTEGER NOT NULL DEFAULT 30,
+    "remainingMinutes" INTEGER NOT NULL DEFAULT 30,
+    "lastResetDate" TEXT NOT NULL DEFAULT '',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "Patient" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "age" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "Appointment" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "patientId" INTEGER NOT NULL,
+    "doctorId" INTEGER NOT NULL,
+    "appointmentDate" TEXT NOT NULL,
+    "durationMinutes" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Appointment_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "Patient" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Appointment_doctorId_fkey" FOREIGN KEY ("doctorId") REFERENCES "Doctor" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

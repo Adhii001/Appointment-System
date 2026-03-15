@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Doctor {
+  id               Int           @id @default(autoincrement())
+  name             String
+  consultStartTime String        @default("10:00")
+  consultEndTime   String        @default("16:00")
+  slotDuration     Int           @default(30)
+  createdAt        DateTime      @default(now())
+  appointments     Appointment[]
+}
+
+model Patient {
+  id           Int           @id @default(autoincrement())
+  name         String
+  phone        String
+  age          Int
+  createdAt    DateTime      @default(now())
+  appointments Appointment[]
+}
+
+model RemoteSystem {
+  id           Int           @id @default(autoincrement())
+  name         String
+  location     String        @default("")
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  appointments Appointment[]
+}
+
+model Appointment {
+  id              Int           @id @default(autoincrement())
+  patientId       Int
+  patientName     String        @default("")
+  doctorId        Int
+  appointmentDate String
+  slotStartTime   String        @default("10:00")
+  slotEndTime     String        @default("10:30")
+  status          String        @default("BOOKED")
+  remoteSystemId  Int?
+  createdAt       DateTime      @default(now())
+  patient         Patient       @relation(fields: [patientId], references: [id])
+  doctor          Doctor        @relation(fields: [doctorId], references: [id])
+  remoteSystem    RemoteSystem? @relation(fields: [remoteSystemId], references: [id])
+
+  @@index([doctorId, appointmentDate])
+  @@index([doctorId, appointmentDate, slotStartTime])
+  @@index([remoteSystemId, appointmentDate])
+}
