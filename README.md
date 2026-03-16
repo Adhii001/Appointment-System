@@ -1,5 +1,36 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Project Size
+
+**Total size: ~710 KB (66 source files)**
+
+| Directory / Area | Size |
+|---|---|
+| `src/` | 333 KB |
+| `package-lock.json` | 262 KB |
+| `prisma/` | 72 KB |
+| Config & other root files | 38 KB |
+| `scripts/` | 5 KB |
+
+### Breakdown by file type
+
+| File Type | Count | Size |
+|---|---|---|
+| `.json` | 3 | 263 KB |
+| `.tsx` | 17 | 260 KB |
+| `.db` (SQLite) | 2 | 88 KB |
+| `.ts` | 26 | 50 KB |
+| `.ico` | 1 | 25 KB |
+| `.sql` | 6 | 9 KB |
+| `.css` | 1 | 6 KB |
+| `.js` | 2 | 5 KB |
+| `.prisma` | 1 | 2 KB |
+| `.mjs` | 3 | 1 KB |
+| `.md` | 1 | 1 KB |
+| Other (`.gitignore`, `.env`, `.toml`) | 3 | < 1 KB |
+
+> **Note:** Sizes exclude the `.git` directory and `node_modules` (which are not tracked in the repository).
+
 ## Getting Started
 
 First, run the development server:
