@@ -70,7 +70,7 @@ export default function AppointmentSuccessPage({
         </div>
         <h1 className="text-2xl font-bold text-rose-700 mb-2">Appointment Not Found</h1>
         <p className="text-rose-500 text-sm mb-6">{error || "This appointment does not exist."}</p>
-        <a href="/" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-md shadow-cyan-200/50 hover:shadow-lg transition-all">
+        <a href="/home" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-md shadow-cyan-200/50 hover:shadow-lg transition-all">
           ← Back to Dashboard
         </a>
       </div>
@@ -80,7 +80,7 @@ export default function AppointmentSuccessPage({
   return (
     <div className="max-w-2xl mx-auto py-8 animate-fade-in-up">
       {/* Back link */}
-      <a href="/" className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-800 font-medium mb-6 transition-colors group">
+      <a href="/home" className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-800 font-medium mb-6 transition-colors group">
         <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
@@ -179,7 +179,7 @@ export default function AppointmentSuccessPage({
 
       {/* Actions */}
       <div className="flex gap-3">
-        <a href="/" className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-md shadow-cyan-200/50 hover:shadow-lg transition-all text-center">
+        <a href="/home" className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-md shadow-cyan-200/50 hover:shadow-lg transition-all text-center">
           ← Back to Dashboard
         </a>
         <a href="/appointments/list" className="flex-1 flex items-center justify-center gap-2 py-3 border-2 border-cyan-200 text-cyan-800 font-medium rounded-xl hover:bg-cyan-50 transition-all text-center">

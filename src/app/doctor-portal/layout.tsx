@@ -2,9 +2,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AUTH_COOKIE_NAME, deserializeSession } from "@/lib/auth";
 import { isTokenActive } from "@/lib/session-store";
-import AdminSideNav from "./AdminSideNav";
 
-export default async function AdminLayout({
+export default async function DoctorPortalLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -13,19 +12,15 @@ export default async function AdminLayout({
   const val = cookieStore.get(AUTH_COOKIE_NAME)?.value;
   const session = deserializeSession(val);
 
-  if (
-    !session ||
-    session.role !== "ADMIN" ||
-    !session.sessionToken ||
-    !isTokenActive(session.sessionToken)
-  ) {
+  const allowed =
+    session &&
+    (session.role === "DOCTOR" || session.role === "ADMIN") &&
+    session.sessionToken &&
+    isTokenActive(session.sessionToken);
+
+  if (!allowed) {
     redirect("/login");
   }
 
-  return (
-    <div className="flex min-h-[calc(100vh-4rem)] -mt-8 -mx-4 sm:-mx-6 lg:-mx-8">
-      <AdminSideNav />
-      <div className="flex-1 overflow-auto p-8">{children}</div>
-    </div>
-  );
+  return <>{children}</>;
 }

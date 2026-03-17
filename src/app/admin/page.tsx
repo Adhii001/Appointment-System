@@ -385,7 +385,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href="/home"
                   className="text-sm text-cyan-600 hover:underline font-medium"
                 >
                   Slot Dashboard →

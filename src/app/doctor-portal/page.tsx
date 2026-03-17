@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import DatePicker from "@/components/ui/DatePicker";
+import { useSearchParams } from "next/navigation";
 
 interface RemoteSystem {
   id: number;
@@ -81,6 +82,8 @@ function isBeforeSlotEnd(endTime: string): boolean {
 }
 
 export default function DoctorPortalPage() {
+  const searchParams = useSearchParams();
+  const doctorIdFromQuery = searchParams.get("doctorId");
   const [doctors, setDoctors] = useState<DoctorOption[]>([]);
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [selectedDate, setSelectedDate] = useState(
@@ -104,6 +107,14 @@ export default function DoctorPortalPage() {
         setDoctors(data.map((d: DoctorOption) => ({ id: d.id, name: d.name })));
       });
   }, []);
+
+  useEffect(() => {
+    if (!doctorIdFromQuery || selectedDoctor) {
+      return;
+    }
+
+    setSelectedDoctor(doctorIdFromQuery);
+  }, [doctorIdFromQuery, selectedDoctor]);
 
   const fetchPortal = useCallback(async () => {
     if (!selectedDoctor) return;
@@ -182,7 +193,7 @@ export default function DoctorPortalPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Back link */}
-      <a href="/" className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-800 font-medium transition-colors group">
+      <a href="/home" className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-800 font-medium transition-colors group">
         <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
@@ -283,9 +294,8 @@ export default function DoctorPortalPage() {
               {data.doctor.name} · {formatTime12(data.doctor.consultStartTime)} – {formatTime12(data.doctor.consultEndTime)}
             </p>
           </div>
-          <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-            isToday ? "bg-emerald-100 text-emerald-700" : isPast ? "bg-gray-200 text-gray-500" : "bg-cyan-100 text-cyan-700"
-          }`}>
+          <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${isToday ? "bg-emerald-100 text-emerald-700" : isPast ? "bg-gray-200 text-gray-500" : "bg-cyan-100 text-cyan-700"
+            }`}>
             {isToday ? "TODAY" : isPast ? "PAST" : "UPCOMING"}
           </span>
           <div className="flex gap-2">
@@ -372,11 +382,10 @@ export default function DoctorPortalPage() {
                       {/* Patient Info */}
                       <div>
                         <div className="flex items-center gap-2">
-                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-sm ${
-                            state === "completed" || state === "past"
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-sm ${state === "completed" || state === "past"
                               ? "bg-gray-300"
                               : "bg-gradient-to-br from-teal-400 to-cyan-500"
-                          }`}>
+                            }`}>
                             {appt.patientName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
                           </div>
                           <div>
@@ -401,9 +410,8 @@ export default function DoctorPortalPage() {
                       {/* Status Badge */}
                       <span className={`text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 ${badge.bg} ${badge.text}`}>
                         {(state === "active" || state === "in_progress") && (
-                          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-                            state === "in_progress" ? "bg-blue-500" : "bg-emerald-500"
-                          }`} />
+                          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${state === "in_progress" ? "bg-blue-500" : "bg-emerald-500"
+                            }`} />
                         )}
                         {badge.label}
                       </span>
@@ -423,11 +431,10 @@ export default function DoctorPortalPage() {
                       <button
                         onClick={() => handleCompleteClick(appt)}
                         disabled={completing}
-                        className={`px-5 py-2 text-sm font-semibold rounded-xl shadow-md transition-all disabled:opacity-50 ${
-                          state === "in_progress"
+                        className={`px-5 py-2 text-sm font-semibold rounded-xl shadow-md transition-all disabled:opacity-50 ${state === "in_progress"
                             ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-blue-200/50 hover:shadow-lg"
                             : "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-200/50 hover:shadow-lg"
-                        }`}
+                          }`}
                       >
                         {completing ? "Completing..." : "✓ Complete Session"}
                       </button>
